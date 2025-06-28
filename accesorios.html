@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accesorios Industriales - PROLAV</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Urbanist', sans-serif;
+      background: #f0f4ff;
+      color: #0f172a;
+      margin-top: 72px;
+    }
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+      z-index: 9999;
+      transition: box-shadow 0.3s ease;
+    }
+    header.scrolled {
+      box-shadow: 0 6px 18px rgba(37,99,235,0.4);
+    }
+    header .container {
+      max-width:1120px;margin:0 auto;padding:1rem 1.5rem;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    header a.logo { font-size:1.75rem;font-weight:900;color:#2563eb;text-decoration:none;letter-spacing:0.15em; }
+    header a.logo:hover { color:#1e40af; }
+    nav ul.desktop-menu {
+      display:flex;gap:2.5rem;
+    }
+    nav ul.desktop-menu li a {
+      font-weight:700;color:#2563eb;text-decoration:none;
+      position:relative;padding-bottom:0.25rem;transition:color 0.3s ease;
+    }
+    nav ul.desktop-menu li a::after {
+      content:'';position:absolute;bottom:0;left:0;height:3px;width:0;
+      background:#1e40af;transition:width 0.3s ease;border-radius:2px;
+    }
+    nav ul.desktop-menu li a:hover { color:#1e40af; }
+    nav ul.desktop-menu li a:hover::after { width:100%; }
+    #menu-btn { display:none;background:none;border:none;cursor:pointer;padding:0.25rem;z-index:10001; }
+    #menu-btn svg { stroke:#2563eb;width:30px;height:30px; }
+    #mobile-menu {
+      position:fixed;top:0;left:0;right:0;bottom:0;
+      background:rgba(15,23,42,0.95);
+      display:none;flex-direction:column;justify-content:center;
+      align-items:center;gap:2.5rem;z-index:10000;padding:2rem;
+      transition:opacity 0.3s ease;
+    }
+    #mobile-menu.show {
+      display:flex;animation:fadeInMenu 0.3s ease forwards;
+    }
+    @keyframes fadeInMenu { from{opacity:0;}to{opacity:1;} }
+    #mobile-menu a { font-size:1.75rem;font-weight:700;color:#2563eb;text-decoration:none;transition:color 0.3s ease;}
+    #mobile-menu a:hover { color:#1e40af; }
+
+    .product-card {
+      background:white;border-radius:1rem;
+      box-shadow:0 6px 20px rgba(37,99,235,0.15);
+      padding:2rem 1.5rem;transition:transform 0.35s ease,box-shadow 0.35s ease;
+      cursor:pointer;text-align:center;display:flex;
+      flex-direction:column;align-items:center;gap:1rem;
+    }
+    .product-card:hover {
+      transform:translateY(-8px);
+      box-shadow:0 14px 40px rgba(37,99,235,0.35);
+    }
+    .product-card img {
+      height:200px;object-fit:contain;border-radius:0.75rem;
+      box-shadow:0 6px 15px rgba(37,99,235,0.2);
+      background:#f9fafb;padding:10px;
+    }
+    .product-card h3 {
+      font-size:1.375rem;font-weight:700;color:#1e40af;
+    }
+    .product-card p {
+      font-size:1rem;color:#475569;
+    }
+    .price {
+      color:#2563eb;font-weight:700;font-size:1.125rem;margin-top:0.5rem;
+    }
+
+    .modal-bg {
+      position:fixed;top:0;left:0;right:0;bottom:0;
+      background:rgba(15,23,42,0.85);
+      display:none;justify-content:center;
+      align-items:center;z-index:9999;
+      overflow-y:auto;padding:20px;
+      backdrop-filter:blur(5px);
+    }
+    .modal-bg.show { display:flex;animation:fadeIn 0.3s ease forwards; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);} }
+    .modal-content {
+      background:white;border-radius:1rem;
+      padding:2.5rem 3rem;max-width:900px;width:100%;
+      max-height:90vh;overflow-y:auto;
+      position:relative;
+      box-shadow:0 12px 30px rgba(37,99,235,0.25);
+    }
+    .close-btn {
+      position:absolute;top:1rem;right:1rem;font-size:2.5rem;
+      font-weight:bold;color:#2563eb;background:transparent;
+      border:none;cursor:pointer;user-select:none;
+      transition:color 0.3s ease;
+    }
+    .close-btn:hover { color:#1e40af; }
+
+    .carousel {
+      position:relative;width:100%;height:450px;
+      overflow:hidden;border-radius:1rem;margin-bottom:1.5rem;
+      background:#e0e7ff;box-shadow:0 8px 24px rgba(37,99,235,0.15);
+    }
+    .carousel img {
+      width:100%;height:100%;object-fit:contain;
+      display:none;user-select:none;
+    }
+    .carousel img.active {
+      display:block;animation:fadeImg 0.5s ease forwards;
+    }
+    @keyframes fadeImg { from{opacity:0;}to{opacity:1;} }
+    .carousel-buttons {
+      position:absolute;top:50%;width:100%;
+      display:flex;justify-content:space-between;
+      transform:translateY(-50%);padding:0 15px;
+      pointer-events:none;
+    }
+    .carousel-buttons button {
+      background:rgba(37,99,235,0.75);border:none;color:white;
+      font-size:2.25rem;padding:0 0.75rem;
+      cursor:pointer;border-radius:0.375rem;
+      pointer-events:all;transition:background-color 0.3s ease;
+      user-select:none;
+    }
+    .carousel-buttons button:hover { background:#1e40af; }
+
+    .btn-cotizar {
+      display:inline-block;background:#2563eb;color:white;
+      padding:0.75rem 2.5rem;border-radius:9999px;
+      font-weight:700;font-size:1.125rem;
+      text-align:center;margin-top:2rem;
+      box-shadow:0 8px 20px rgba(37,99,235,0.3);
+      transition:background-color 0.3s ease,box-shadow 0.3s ease;
+      user-select:none;
+    }
+    .btn-cotizar:hover {
+      background:#1e40af;box-shadow:0 12px 30px rgba(30,58,138,0.6);
+    }
+
+    @media (max-width:768px) {
+      #menu-btn { display:block; }
+      nav ul.desktop-menu { display:none; }
+      .carousel { height:300px; }
+      .product-card img { height:150px; }
+    }
+    footer {
+      background:#2563eb;color:white;
+      padding:1.5rem 0;text-align:center;
+      font-weight:600;font-size:1rem;margin-top:4rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">PROLAV</a>
+      <nav>
+        <ul class="desktop-menu">
+          <li><a href="lavadoras.html">Lavadoras</a></li>
+          <li><a href="secadoras.html">Secadoras</a></li>
+          <li><a href="mangles.html">Mangles</a></li>
+          <li><a href="refacciones.html">Refacciones Originales</a></li>
+          <li><a href="accesorios.html" aria-current="page">Accesorios</a></li>
+        </ul>
+      </nav>
+      <button id="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+        <svg fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" viewBox="0 0 24 24" height="32" width="32">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <nav id="mobile-menu" aria-hidden="true">
+        <a href="lavadoras.html">Lavadoras</a>
+        <a href="secadoras.html">Secadoras</a>
+        <a href="mangles.html">Mangles</a>
+        <a href="refacciones.html">Refacciones</a>
+        <a href="accesorios.html" aria-current="page">Accesorios</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="py-20 px-6 max-w-6xl mx-auto" data-aos="fade-up">
+    <h1 class="text-4xl font-extrabold mb-12 text-center text-[#1e40af]">Accesorios Industriales</h1>
+    <div class="grid md:grid-cols-3 gap-10">
+      <!-- Accesorio 1 -->
+      <div class="product-card" tabindex="0" onclick="openModal('modalAcc1')" role="button" data-aos="zoom-in">
+        <img src="images/image copy 16.png" alt="Carrito de Acero Inoxidable" loading="lazy"/>
+        <h3>Carrito de Lavanderia</h3>
+        <p class="price">$300.00 pesos cada uno </p>
+      </div>
+      <!-- Accesorio 2 -->
+      <div class="product-card" tabindex="0" onclick="openModal('modalAcc2')" role="button" data-aos="zoom-in" data-aos-delay="100">
+        <img src="images/image copy 20.png" alt="Mesa de Trabajo" loading="lazy"/>
+        <h3>Carrito de Lavanderia</h3>
+        <p class="price">$300.00 pesos cada uno</p> 
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Accesorio 1 -->
+  <div id="modalAcc1" class="modal-bg" onclick="closeModal(event,'modalAcc1')" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="close-btn" aria-label="Cerrar" onclick="closeModal(null,'modalAcc1')">&times;</button>
+      <h2 id="titleAcc1" class="text-3xl font-bold mb-6 text-center text-[#1e40af]">Carrito de Lavanderia</h2>
+      <div class="carousel" id="carouselAcc1" aria-live="polite">
+        <img src="images/image copy 16.png" class="active" alt="Carrito imagen 1"/>
+        <img src="images/image copy 17.png" alt="Carrito imagen 2"/>
+        <img src="images/image copy 18.png" alt="Carrito imagen 2"/>
+        <img src="images/image copy 19.png" alt="Carrito imagen 2"/>
+        <div class="carousel-buttons">
+          <button aria-label="Anterior" onclick="prevSlide('carouselAcc1')">&#10094;</button>
+          <button aria-label="Siguiente" onclick="nextSlide('carouselAcc1')">&#10095;</button>
+        </div>
+      </div>
+      <p class="text-lg mt-4">18in x 26in x 18in</p>
+      <p class="text-lg mt-4">30 en almacén</p>
+      <p class="text-lg mt-4"><strong>No incluye ruedas, ni base, ni flete</strong></p>
+
+      <a href="mailto:azael@macsaweb.com.mx?subject=Cotización%20Carrito%20Inoxidable" class="btn-cotizar">Cotizar por correo</a>
+    </div>
+  </div>
+
+  <!-- Modal Accesorio 2 -->
+  <div id="modalAcc2" class="modal-bg" onclick="closeModal(event,'modalAcc2')" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="close-btn" aria-label="Cerrar" onclick="closeModal(null,'modalAcc2')">&times;</button>
+      <h2 class="text-3xl font-bold mb-6 text-center text-[#1e40af]">Carrito de Lavanderia</h2>
+      <div class="carousel" id="carouselAcc2" aria-live="polite">
+        <img src="images/image copy 20.png" class="active" alt="Mesa imagen 1"/>
+        <img src="images/image copy 21.png" alt="Mesa imagen 2"/>
+        <img src="images/image copy 22.png" alt="Mesa imagen 2"/>
+
+        <div class="carousel-buttons">
+          <button aria-label="Anterior" onclick="prevSlide('carouselAcc2')">&#10094;</button>
+          <button aria-label="Siguiente" onclick="nextSlide('carouselAcc2')">&#10095;</button>
+        </div>
+      </div>
+      <p class="text-lg mt-4">18in x 26in x 18in</p>
+      <p class="text-lg mt-4">5 en almacén</p>
+      <p class="text-lg mt-4"><strong>No incluye ruedas, ni base, ni flete</strong></p>
+
+
+      <p class="price">$300.00</p>
+      <a href="mailto:azael@macsaweb.com.mx?subject=Cotización%20Mesa%20Trabajo" class="btn-cotizar">Cotizar por correo</a>
+    </div>
+  </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once:true, duration:900, easing:'ease-out-cubic' });
+
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      mobileMenu.classList.toggle('show');
+    });
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(event, id) {
+      if (!event || event.target.classList.contains('modal-bg') || event.target.classList.contains('close-btn')) {
+        document.getElementById(id).classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }
+    function nextSlide(cid) {
+      const imgs = document.getElementById(cid).querySelectorAll('img');
+      let i = [...imgs].findIndex(i=>i.classList.contains('active'));
+      imgs[i].classList.remove('active');
+      imgs[(i+1)%imgs.length].classList.add('active');
+    }
+    function prevSlide(cid) {
+      const imgs = document.getElementById(cid).querySelectorAll('img');
+      let i = [...imgs].findIndex(i=>i.classList.contains('active'));
+      imgs[i].classList.remove('active');
+      imgs[(i-1+imgs.length)%imgs.length].classList.add('active');
+    }
+  </script>
+
+ <!-- Botón flotante de WhatsApp -->
+ <a href="https://wa.me/5218120109807?text=Hola%2C%20estoy%20interesado%20en%20información%20sobre%20los%20equipos%20PROLAV"
+   target="_blank"
+   class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg z-[9999] transition duration-300"
+   aria-label="Chatea con nosotros por WhatsApp"
+   style="position: fixed !important;">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="28" height="28">
+    <path d="M12.01 2C6.48 2 2 6.48 2 12c0 1.85.5 3.63 1.43 5.18L2 22l4.89-1.41A9.95 9.95 0 0 0 12.01 22c5.52 0 10-4.48 10-10s-4.48-10-9.99-10Zm-.01 18c-1.68 0-3.29-.49-4.67-1.42l-.33-.22-2.9.84.83-2.84-.21-.34A7.964 7.964 0 0 1 4 12c0-4.41 3.59-8 8.01-8 4.41 0 7.99 3.59 7.99 8s-3.58 8-7.99 8Zm4.19-5.38-.58-.29c-.32-.16-1.86-.91-2.15-1.02-.29-.11-.5-.16-.71.16-.21.32-.82 1.02-1.01 1.23-.19.21-.37.24-.69.08-.32-.16-1.36-.5-2.6-1.6-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.49.14-.65.15-.15.32-.37.48-.55.16-.18.21-.29.32-.49.11-.21.05-.4-.03-.56-.08-.16-.71-1.71-.97-2.34-.25-.6-.5-.51-.69-.51h-.59c-.21 0-.55.08-.84.4s-1.1 1.08-1.1 2.63 1.13 3.06 1.29 3.28c.16.21 2.23 3.41 5.41 4.78.76.33 1.36.53 1.83.67.77.24 1.47.21 2.02.13.62-.09 1.86-.76 2.13-1.49.27-.72.27-1.34.19-1.49-.08-.15-.29-.24-.6-.4Z"/>
+  </svg>
+ </a>
+
+</body>
+</html>
